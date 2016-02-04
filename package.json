@@ -1,0 +1,38 @@
+{
+  "name": "quenya",
+  "version": "1.0.0",
+  "description": "Rustdoc-style documentation for JS and others",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/passcod/quenya.git"
+  },
+  "keywords": [
+    "rustdoc",
+    "rust",
+    "doc",
+    "documentation",
+    "literate"
+  ],
+  "author": "Félix Saparelli <me@passcod.name> (https://passcod.name)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/passcod/quenya/issues"
+  },
+  "homepage": "https://github.com/passcod/quenya#readme",
+  "devDependencies": {
+    "standard": "^5.4.1"
+  },
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "glob-promise": "^1.0.6",
+    "markdown-it": "^5.1.0",
+    "minimist": "^1.2.0",
+    "split": "^1.0.0",
+    "through2": "^2.0.0",
+    "through2-map": "^2.0.0"
+  }
+}
