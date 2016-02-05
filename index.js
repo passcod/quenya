@@ -5,9 +5,11 @@
 
 const fs = require('fs')
 const map = require('through2-map').obj
-const Markdown = require('markdown-it')
 const path = require('path')
 const Readable = require('stream').Readable
+
+const COMMENT = /^\s*(\/\/|#)/
+const DOC_COMMENT = /^\s*(\/\/|#)!/
 
 module.exports = function (opts) {
   opts = Object.assign({
@@ -46,10 +48,11 @@ module.exports = function (opts) {
 function consume (docStream) {
   docStream
   .pipe(map(obj => {
-    obj.title = obj.lines.shift().replace(/^\/\/!\s+/, '')
+    obj.contextLine = obj.lineNumber + obj.lines.length - 1
+    obj.title = obj.lines.shift().replace(DOC_COMMENT, '').trim()
     obj.context = obj.lines.pop()
     obj.body = obj.lines.map(
-      line => line.replace(/^\/\//, '').trim()
+      line => line.replace(COMMENT, '').trim()
     ).join('\n').trim()
     delete obj.lines
     return obj
@@ -89,7 +92,7 @@ class Extractor {
     line = line.trim()
     this.line += 1
 
-    if (line.match(/^\s*\/\/!/)) {
+    if (line.match(DOC_COMMENT)) {
       // First line of doc comment.
 
       if (this.current !== false) {
@@ -99,7 +102,7 @@ class Extractor {
 
       this.lineNumber = this.line
       this.current = [line]
-    } else if (line.match(/^\s*\/\//)) {
+    } else if (line.match(COMMENT)) {
       // Either normal comments or the rest of a doc comment.
 
       if (this.current !== false) {
