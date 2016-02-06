@@ -1,7 +1,7 @@
 {
   "name": "quenya",
   "version": "1.0.0",
-  "description": "Rustdoc-style documentation for JS and others",
+  "description": "Rustdoc-inspired code documentation",
   "main": "index.js",
   "scripts": {
     "test": "standard"
