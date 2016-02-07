@@ -4,8 +4,8 @@
 // Reads and parses files using Rustdoc-inspired comments
 
 const fs = require('fs')
-const map = require('through2-map').obj
 const Readable = require('stream').Readable
+const Transform = require('stream').Transform
 
 const COMMENT = /^\s*(\/\/(\/|!)?|#(#|!)?)/
 const DOC_COMMENT = /^\s*(\/\/(\/|!)|#(#|!))/
@@ -31,11 +31,47 @@ module.exports = function (opts) {
     fs.createReadStream(file)
     .on('error', err => void docStream.emit('error', err))
     .on('end', () => void extractor.send())
-    .pipe(require('split')())
-    .on('data', extractor.parse)
+    .pipe(new Splitter(extractor))
   })
 
-  return consume(docStream)
+  return docStream
+}
+
+//! Splits the input (text) stream into lines and feeds them to the Extractor
+//
+// This is technically *not* a Transform, as it consumes the stream without
+// generating anything back, but the mechanism of flush is perfect for this.
+class Splitter extends Transform {
+  constructor (extractor) {
+    super()
+    this.current = ''
+    this.extractor = extractor
+  }
+
+  extract (line) {
+    this.extractor.parse(line)
+  }
+
+  _transform (chunk, encoding, next) {
+    if (encoding === 'buffer') {
+      chunk = chunk.toString()
+    }
+
+    chunk = this.current + chunk
+    const lines = chunk.split(/\r?\n/)
+    this.current = lines.pop()
+
+    lines.forEach(line => {
+      this.extract(encoding === 'buffer' ? new Buffer(line) : line)
+    })
+
+    next()
+  }
+
+  _flush (done) {
+    this.extract(this.current)
+    done()
+  }
 }
 
 //! Extracts the text out of a raw comment line
@@ -46,29 +82,10 @@ function rawLineToText (line) {
     : line.slice(cut + 1).trim()
 }
 
-//! Transforms doc comments in the stream to the output format
-function consume (docStream) {
-  return docStream
-  .pipe(map(obj => {
-    // Order is important here as we're mutating the array
-    obj.contextLine = obj.lineNumber + obj.lines.length - 1
-    obj.title = rawLineToText(obj.lines.shift())
-
-    // Context must be null if non-existent or blank or all-whitespace
-    obj.context = obj.lines.pop()
-    obj.context = obj.context ? obj.context.trim() : obj.context
-    obj.context = obj.context || null
-
-    obj.body = obj.lines.map(rawLineToText).join('\n').trim()
-    delete obj.lines
-    return obj
-  }))
-}
-
 //! Extracts doc comments from a stream of lines
 //
-// This is a simple state machine that is fed a file line by line, and
-// spits out unparsed and unprocessed blocks of doc comments.
+// This is a simple state machine that is fed a file line by line, parses
+// each line, constructs a doc comment object, and sends it off to the stream.
 class Extractor {
   constructor (docStream, path) {
     this.current = false
@@ -81,18 +98,39 @@ class Extractor {
     this.send = this.send.bind(this)
   }
 
+  //! Sends the current state to the stream and resets
   send () {
     if (this.current === false) { return }
-    this.docStream.push({
-      lineNumber: this.lineNumber,
-      lines: this.current,
-      path: this.path
-    })
+    this.docStream.push(this.format())
     this.current = false
   }
 
+  //! Transforms the current state to the output format
+  format () {
+    // If the last line is a comment, add a null context
+    if (this.current[this.current.length - 1].match(COMMENT)) {
+      this.current.push(null)
+    }
+
+    const obj = {
+      path: this.path,
+      lineNumber: this.lineNumber,
+
+      // Order is important here as we're mutating the array
+      contextLine: this.lineNumber + this.current.length - 1,
+      title: rawLineToText(this.current.shift()),
+      context: this.current.pop(),
+      body: this.current.map(rawLineToText).join('\n').trim()
+    }
+
+    // Context must be null if non-existent or blank or all-whitespace
+    obj.context = obj.context ? obj.context.trim() || null : null
+    return obj
+  }
+
+  //! The line-by-line state machine
   parse (line) {
-    line = line.trim()
+    line = line.toString().trim()
     this.line += 1
 
     if (line.match(DOC_COMMENT)) {

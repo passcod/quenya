@@ -28,8 +28,6 @@
     "standard": "^5.4.1"
   },
   "dependencies": {
-    "glob": "^6.0.4",
-    "split": "^1.0.0",
-    "through2-map": "^2.0.0"
+    "glob": "^6.0.4"
   }
 }
