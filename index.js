@@ -53,8 +53,12 @@ function consume (docStream) {
     // Order is important here as we're mutating the array
     obj.contextLine = obj.lineNumber + obj.lines.length - 1
     obj.title = rawLineToText(obj.lines.shift())
-    obj.context = obj.lines.pop() || null
+
+    // Context must be null if non-existent or blank or all-whitespace
+    obj.context = obj.lines.pop()
     obj.context = obj.context ? obj.context.trim() : obj.context
+    obj.context = obj.context || null
+
     obj.body = obj.lines.map(rawLineToText).join('\n').trim()
     delete obj.lines
     return obj
