@@ -7,7 +7,7 @@ const fs = require('fs')
 const map = require('through2-map').obj
 const Readable = require('stream').Readable
 
-const COMMENT = /^\s*(\/\/|#)/
+const COMMENT = /^\s*(\/\/(\/|!)?|#(#|!)?)/
 const DOC_COMMENT = /^\s*(\/\/(\/|!)|#(#|!))/
 
 module.exports = function (opts) {
@@ -96,15 +96,14 @@ class Extractor {
     this.line += 1
 
     if (line.match(DOC_COMMENT)) {
-      // First line of doc comment.
-
-      if (this.current !== false) {
-        // We're still extracting a doc comment, so send it and reset.
-        this.send()
+      if (this.current === false) {
+        // First line of doc comment.
+        this.lineNumber = this.line
+        this.current = [line]
+      } else {
+        // Other line of "full form" doc comment
+        this.current.push(line)
       }
-
-      this.lineNumber = this.line
-      this.current = [line]
     } else if (line.match(COMMENT)) {
       // Either normal comments or the rest of a doc comment.
 
