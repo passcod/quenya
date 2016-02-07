@@ -1,0 +1,40 @@
+/// Classic rustdoc form
+///
+/// with three slashes
+/// all the way
+
+//! Classic bang rustdoc form
+//!
+//! with two slashes and a bang
+//! all the way
+
+/// Header form
+//
+// with three slashes on the first line
+// and two slashes from then on
+
+//! Bang header form
+//
+// with two slashes and a bang on the first line
+// and two slashes from then on
+// (this is the "default" form, used in Quenya's own documentation)
+
+## Full hash form
+##
+## with two hash signs
+## all the way
+
+## Header hash form
+#
+# with two hash signs on the first line
+# and one hash sign from then on
+
+#! Full hash bang form
+#!
+#! with one hash sign followed by a bang
+#! all the way
+
+#! Header hash bang form
+#
+# with one hash sign and a bang on the first line
+# and one hash sign from then on

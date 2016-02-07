@@ -1,0 +1,16 @@
+{"lineNumber":1,"path":"/home/code/js/quenya/test/forms.txt","contextLine":1,"title":"Classic rustdoc form","context":null,"body":""}
+{"lineNumber":2,"path":"/home/code/js/quenya/test/forms.txt","contextLine":2,"title":"","context":null,"body":""}
+{"lineNumber":3,"path":"/home/code/js/quenya/test/forms.txt","contextLine":3,"title":"with three slashes","context":null,"body":""}
+{"lineNumber":4,"path":"/home/code/js/quenya/test/forms.txt","contextLine":5,"title":"all the way","context":null,"body":""}
+{"lineNumber":6,"path":"/home/code/js/quenya/test/forms.txt","contextLine":6,"title":"Classic bang rustdoc form","context":null,"body":""}
+{"lineNumber":7,"path":"/home/code/js/quenya/test/forms.txt","contextLine":7,"title":"","context":null,"body":""}
+{"lineNumber":8,"path":"/home/code/js/quenya/test/forms.txt","contextLine":8,"title":"with two slashes and a bang","context":null,"body":""}
+{"lineNumber":9,"path":"/home/code/js/quenya/test/forms.txt","contextLine":10,"title":"all the way","context":null,"body":""}
+{"lineNumber":11,"path":"/home/code/js/quenya/test/forms.txt","contextLine":15,"title":"Header form","context":null,"body":"with three slashes on the first line\nand two slashes from then on"}
+{"lineNumber":16,"path":"/home/code/js/quenya/test/forms.txt","contextLine":21,"title":"Bang header form","context":null,"body":"with two slashes and a bang on the first line\nand two slashes from then on\n(this is the \"default\" form, used in Quenya's own documentation)"}
+{"lineNumber":22,"path":"/home/code/js/quenya/test/forms.txt","contextLine":22,"title":"Full hash form","context":null,"body":""}
+{"lineNumber":23,"path":"/home/code/js/quenya/test/forms.txt","contextLine":23,"title":"","context":null,"body":""}
+{"lineNumber":24,"path":"/home/code/js/quenya/test/forms.txt","contextLine":24,"title":"with two hash signs","context":null,"body":""}
+{"lineNumber":25,"path":"/home/code/js/quenya/test/forms.txt","contextLine":26,"title":"all the way","context":null,"body":""}
+{"lineNumber":27,"path":"/home/code/js/quenya/test/forms.txt","contextLine":31,"title":"Header hash form","context":null,"body":"with two hash signs on the first line\nand one hash sign from then on"}
+{"lineNumber":32,"path":"/home/code/js/quenya/test/forms.txt","contextLine":32,"title":"Full hash bang form","context":null,"body":""}

@@ -5,60 +5,59 @@
 
 const fs = require('fs')
 const map = require('through2-map').obj
-const path = require('path')
 const Readable = require('stream').Readable
 
 const COMMENT = /^\s*(\/\/|#)/
-const DOC_COMMENT = /^\s*(\/\/|#)!/
+const DOC_COMMENT = /^\s*(\/\/(\/|!)|#(#|!))/
 
 module.exports = function (opts) {
   opts = Object.assign({
-    files: [],
-    errorHandler: err => { throw err }
+    files: []
   }, opts)
 
-  // Resolve all paths and eliminate duplicates
+  // Eliminate duplicate paths
   opts.files = opts.files.reduce((memo, file) => {
-    const filepath = path.resolve(process.cwd(), file)
-    if (memo.indexOf(filepath) === -1) {
-      memo.push(filepath)
+    if (memo.indexOf(file) === -1) {
+      memo.push(file)
     }
 
     return memo
   }, [])
 
-  const docStream = new Readable({ objectMode: true })
-  docStream._read = () => {}
+  const docStream = new Readable({ objectMode: true, read: () => {} })
 
-  return Promise.all(opts.files.map(file => new Promise((resolve, reject) => {
+  opts.files.map(file => {
     const extractor = new Extractor(docStream, file)
     fs.createReadStream(file)
-    .on('error', err => { opts.errorHandler(err); resolve() })
-    .on('end', () => { extractor.send(); resolve() })
+    .on('error', err => void docStream.emit('error', err))
+    .on('end', () => void extractor.send())
     .pipe(require('split')())
     .on('data', extractor.parse)
-  })))
-  .then(() => {
-    consume(docStream)
   })
-  .catch(err => void console.error(err))
+
+  return consume(docStream)
 }
 
-//! Consumes the doc comment stream
+//! Extracts the text out of a raw comment line
+function rawLineToText (line) {
+  const cut = line.indexOf(' ')
+  return cut === -1
+    ? ''
+    : line.slice(cut + 1).trim()
+}
+
+//! Transforms doc comments in the stream to the output format
 function consume (docStream) {
-  docStream
+  return docStream
   .pipe(map(obj => {
+    // Order is important here as we're mutating the array
     obj.contextLine = obj.lineNumber + obj.lines.length - 1
-    obj.title = obj.lines.shift().replace(DOC_COMMENT, '').trim()
-    obj.context = obj.lines.pop()
-    obj.body = obj.lines.map(
-      line => line.replace(COMMENT, '').trim()
-    ).join('\n').trim()
+    obj.title = rawLineToText(obj.lines.shift())
+    obj.context = obj.lines.pop() || null
+    obj.context = obj.context ? obj.context.trim() : obj.context
+    obj.body = obj.lines.map(rawLineToText).join('\n').trim()
     delete obj.lines
     return obj
-  }))
-  .pipe(map(obj => {
-    console.log(obj)
   }))
 }
 

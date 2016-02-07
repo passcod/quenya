@@ -82,8 +82,18 @@ perform more advanced rendering.
 
 ### Tooling
 
-If you know of or have developed a tool that consumes or complements Quenya,
+If you know of, or have developed, a tool that consumes or complements Quenya,
 do open a Pull Request or even just an Issue on GitHub to add it here.
+
+#### Quenya cli tool
+
+The `quenya` executable, which ships with this package. Give it a list of files
+or quoted globs to get a stream of JSON objects over STDOUT.
+
+```
+$ npm install -g quenya
+$ quenya file.js '*.rb' '/some/path/**/*.sh'
+```
 
 ### API
 
@@ -123,11 +133,11 @@ quenya({
 var context = 'is the first line of code after the comment block'
 ```
 
-- The `context` can be blank (the empty string or all-whitespace) or `null`.
-- The `lineNumber` refers to the 1-indexed first line of the doc comment.
-- The `contextLine` is the line number of the `context`.
-- The `path` is the absolute path to the file.
-- All string values are trimmed (whitespace removed from both sides).
+- The `context` can be `null` if the actual line was blank or non-existent (EOF)
+- The `lineNumber` refers to the 1-indexed first line of the doc comment
+- The `contextLine` is the 1-indexed line number of the `context`
+- The `path` is the absolute path to the file
+- All string values are trimmed (whitespace removed from both sides)
 
 ## Forms
 
