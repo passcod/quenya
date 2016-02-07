@@ -1,6 +1,6 @@
 {
   "name": "quenya",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Rustdoc-inspired code documentation",
   "main": "index.js",
   "bin": "bin/quenya.js",
