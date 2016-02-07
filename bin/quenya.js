@@ -21,7 +21,7 @@ if (argv._.length === 0 || argv.help) {
     'Options:\n' +
     '  -h, --help             display this help and exit\n'
   )
-  return process.exit()
+  process.exit()
 }
 
 const glob = require('glob-promise')
