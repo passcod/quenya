@@ -85,7 +85,7 @@ perform more advanced rendering.
 If you know of, or have developed, a tool that consumes or complements Quenya,
 do open a Pull Request or even just an Issue on GitHub to add it here.
 
-#### Quenya cli tool
+#### CLI tool
 
 The `quenya` executable, which ships with this package. Give it a list of files
 or quoted globs to get a stream of JSON objects over STDOUT.
@@ -94,6 +94,13 @@ or quoted globs to get a stream of JSON objects over STDOUT.
 $ npm install -g quenya
 $ quenya file.js '*.rb' '/some/path/**/*.sh'
 ```
+
+#### [ESTree Enhancer]
+
+Enhances Quenya objects by parsing source JavaScript and associating the
+doc objects' contexts with their corresponding AST node.
+
+[ESTree Enhancer]: https://www.npmjs.com/packages/quenya-estree
 
 ### API
 
