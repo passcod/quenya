@@ -1,5 +1,7 @@
 # Quenya
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/passcod/quenya.svg)](https://greenkeeper.io/)
+
 _Rustdoc-inspired code documentation._
 
 ## Examples
