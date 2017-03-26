@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/passcod/quenya#readme",
   "devDependencies": {
-    "standard": "^5.4.1"
+    "standard": "^9.0.2"
   },
   "dependencies": {
-    "glob": "^6.0.4"
+    "glob": "^7.1.1"
   }
 }
